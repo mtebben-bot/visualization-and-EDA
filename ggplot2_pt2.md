@@ -253,3 +253,23 @@ scale_fill_discrete = scale_fill_viridis_d
 
 Will include at the top of all R markdown documents to keep formatting
 the same for any plots created in any fuutre R markdown document.
+
+## Data arguments in `geom`
+
+``` r
+central_park = 
+  weather_df %>% 
+  filter(name == "CentralPark_NY")
+
+waikiki = 
+  weather_df %>% 
+  filter(name == "Waikiki_HA")
+
+ggplot(data = waikiki, aes(x = date, y = tmax, color = name)) +
+  geom_point() +
+  geom_line(data = central_park)
+```
+
+    ## Warning: Removed 3 rows containing missing values (geom_point).
+
+![](ggplot2_pt2_files/figure-gfm/data%20arguments-1.png)<!-- -->
