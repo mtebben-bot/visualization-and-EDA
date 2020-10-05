@@ -45,8 +45,64 @@ weather_df %>%
   )
 ```
 
+## Scales
 
+```{r scales}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temp",
+    y = "Maximum daily temp",
+    caption = "Data from rnoaa package, temperatures from 2017"
+  ) +
+  scale_x_continuous(
+    breaks = c(-15,0,15)
+  ) +
+  scale_y_continuous(
+    trans = "sqrt",
+    position = "right"
+  )
+```
+Can use trans = to transform, can do sqrt, log, and can use position to choose location of Y-axis
 
+#### Introducing scale_color_hue
+
+```{r hue}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temp",
+    y = "Maximum daily temp",
+    caption = "Data from rnoaa package, temperatures from 2017"
+  ) +
+  scale_color_hue(
+    name = "Location",
+    h = c(100,300))
+```
+name = in this scale_color_hue function is the name of the legend, so we rename to "Location".
+
+#### Introducing scale_color_viridis
+
+```{r viridis}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temp",
+    y = "Maximum daily temp",
+    caption = "Data from rnoaa package, temperatures from 2017"
+  ) +
+  viridis::scale_color_viridis(
+    name = "Location",
+    discrete = TRUE
+  )
+```
+Viridis is better for those who are color blind, easier than creating our own color scales (which Jeff does not recommend doing)
 
 
 

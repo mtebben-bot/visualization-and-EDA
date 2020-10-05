@@ -98,3 +98,81 @@ weather_df %>%
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
 ![](ggplot2_pt2_files/figure-gfm/labelling-1.png)<!-- -->
+
+## Scales
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temp",
+    y = "Maximum daily temp",
+    caption = "Data from rnoaa package, temperatures from 2017"
+  ) +
+  scale_x_continuous(
+    breaks = c(-15,0,15)
+  ) +
+  scale_y_continuous(
+    trans = "sqrt",
+    position = "right"
+  )
+```
+
+    ## Warning in self$trans$transform(x): NaNs produced
+
+    ## Warning: Transformation introduced infinite values in continuous y-axis
+
+    ## Warning: Removed 90 rows containing missing values (geom_point).
+
+![](ggplot2_pt2_files/figure-gfm/scales-1.png)<!-- --> Can use trans =
+to transform, can do sqrt, log, and can use position to choose location
+of Y-axis
+
+#### Introducing scale\_color\_hue
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temp",
+    y = "Maximum daily temp",
+    caption = "Data from rnoaa package, temperatures from 2017"
+  ) +
+  scale_color_hue(
+    name = "Location",
+    h = c(100,300))
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplot2_pt2_files/figure-gfm/hue-1.png)<!-- --> name = in this
+scale\_color\_hue function is the name of the legend, so we rename to
+“Location”.
+
+#### Introducing scale\_color\_viridis
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temp",
+    y = "Maximum daily temp",
+    caption = "Data from rnoaa package, temperatures from 2017"
+  ) +
+  viridis::scale_color_viridis(
+    name = "Location",
+    discrete = TRUE
+  )
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplot2_pt2_files/figure-gfm/viridis-1.png)<!-- --> Viridis is
+better for those who are color blind, easier than creating our own color
+scales (which Jeff does not recommend doing)
