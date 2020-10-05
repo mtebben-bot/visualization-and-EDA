@@ -176,3 +176,55 @@ weather_df %>%
 ![](ggplot2_pt2_files/figure-gfm/viridis-1.png)<!-- --> Viridis is
 better for those who are color blind, easier than creating our own color
 scales (which Jeff does not recommend doing)
+
+## Themes
+
+#### Pre-defined themes exist and are useful/nice looking
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temp",
+    y = "Maximum daily temp",
+    caption = "Data from rnoaa package, temperatures from 2017"
+  ) +
+  viridis::scale_color_viridis(
+    name = "Location",
+    discrete = TRUE
+  )+
+  theme_minimal()
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplot2_pt2_files/figure-gfm/themes-1.png)<!-- --> Can use other
+themes, but this removes the default aspects of the theme and use
+theme\_minimal.
+
+#### Can use the function theme() to do some of your own adjustments.
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temp",
+    y = "Maximum daily temp",
+    caption = "Data from rnoaa package, temperatures from 2017"
+  ) +
+  viridis::scale_color_viridis(
+    name = "Location",
+    discrete = TRUE
+  ) +
+  theme(legend.position = "bottom")
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplot2_pt2_files/figure-gfm/move%20legend-1.png)<!-- -->
+
+### Important to note: if you put a theme (example theme\_minimal) after you put another theme function (like changing the legend location), it will go to the default for the theme\_minimal. You need to include default theme types before you include the theme elements.

@@ -104,7 +104,47 @@ weather_df %>%
 ```
 Viridis is better for those who are color blind, easier than creating our own color scales (which Jeff does not recommend doing)
 
+## Themes
 
+#### Pre-defined themes exist and are useful/nice looking
 
+```{r themes}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temp",
+    y = "Maximum daily temp",
+    caption = "Data from rnoaa package, temperatures from 2017"
+  ) +
+  viridis::scale_color_viridis(
+    name = "Location",
+    discrete = TRUE
+  )+
+  theme_minimal()
+```
+Can use other themes, but this removes the default aspects of the theme and use theme_minimal.
+
+#### Can use the function theme() to do some of your own adjustments.
+
+```{r move legend}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature plot",
+    x = "Minimum daily temp",
+    y = "Maximum daily temp",
+    caption = "Data from rnoaa package, temperatures from 2017"
+  ) +
+  viridis::scale_color_viridis(
+    name = "Location",
+    discrete = TRUE
+  ) +
+  theme(legend.position = "bottom")
+```
+
+### Important to note: if you put a theme (example theme_minimal) after you put another theme function (like changing the legend location), it will go to the default for the theme_minimal. You need to include default theme types before you include the theme elements.
 
 
