@@ -273,3 +273,34 @@ ggplot(data = waikiki, aes(x = date, y = tmax, color = name)) +
     ## Warning: Removed 3 rows containing missing values (geom_point).
 
 ![](ggplot2_pt2_files/figure-gfm/data%20arguments-1.png)<!-- -->
+
+## Time for patchwork
+
+``` r
+tmin_tmax_p = 
+  weather_df %>% 
+    ggplot(aes(x = tmin, y = tmax, color = name)) +
+    geom_point(alpha = 0.5) +
+    theme(legend.position = "bottom")
+
+prcp_dens_p = 
+  weather_df %>% 
+  filter(prcp > 0) %>% 
+  ggplot(aes(x = prcp, fill = name)) +
+  geom_density(alpha = 0.5)
+
+tmax_date_p = 
+  weather_df %>% 
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_point() +
+  geom_smooth() +
+  theme(legend.position = "none")
+
+tmin_tmax_p + prcp_dens_p
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplot2_pt2_files/figure-gfm/patchwork-1.png)<!-- --> Patchwork
+displays when you name these plots and then use + or / to determine
+positioning and inclusion of plots.
