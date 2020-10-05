@@ -1,0 +1,171 @@
+---
+title: "Visualization"
+subtitle: "Part I"
+output: github_document
+---
+
+```{r setup}
+library(tidyverse)
+library(ggridges)
+```
+
+## Load weather data
+
+```{r load weather data}
+weather_df = 
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728", "USC00519397", "USS0023B17S"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(
+      id, 
+      USW00094728 = "CentralPark_NY", 
+      USC00519397 = "Waikiki_HA",
+      USS0023B17S = "Waterhole_WA"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+```
+
+## Scatterplots
+
+#### First scatterplot!
+
+```{r scatterplot1}
+ggplot(weather_df, aes(x = tmin, y = tmax)) +
+  geom_point()
+```
+
+#### New approach, same plot
+
+```{r scatterplot2}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_point()
+```
+Allows for some data manipulation before graphing in the same step, creates consistency between this and how we code other things in R.
+
+#### Save and edit a plot object
+
+```{r plot object}
+weather_plot = 
+  weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax))
+
+weather_plot + geom_point()
+```
+Allows you to make different types of graphs on the same plot.
+
+## Advanced scatterplot
+
+Let's make it fancy.
+
+```{r fancy scatterplot}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+Can also place aes in the other geometries, but if you place it in the ggplot function, then you will apply that aesthetic to everything that comes later.
+
+#### Faceting some things.
+
+```{r faceting}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.2, size = 0.8) +
+  geom_smooth(se = FALSE) +
+  facet_grid(. ~ name)
+```
+The facet grid function says (rows ~ columns), so in this case, we are saying no rows, just columns, defined by the variable name.
+Alpha indicates the level of transparency, size sets the size of the points. Alpha can also be used in ggplot and can be set by variables (example: alpha = tmin).
+
+#### Time to combine some elements and create a new plot.
+
+```{r another plot}
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_point(aes(size = prcp), alpha = 0.5) +
+  geom_smooth(se = FALSE) +
+  facet_grid(. ~ name)
+```
+
+## A little note
+
+You can have whatever geoms you want.
+
+There are some fun ones `geom_density2d()`, `geom_hex`.
+
+## Univariate plots.
+
+Start off with histograms.
+
+```{r histogram}
+weather_df %>% 
+  ggplot(aes(x = tmin)) +
+  geom_histogram()
+```
+
+Some things to do with histograms.
+
+```{r histogram2}
+weather_df %>% 
+  ggplot(aes(x = tmin, fill = name)) +
+  geom_histogram(position = "dodge")
+```
+We use fill= rather than color= to fill in the bars of the histogram. Using position = "dodge" means that the bars will not stack on top of each other.
+Could also use facet_grid() to see the three plots separately.
+
+#### New geometry - geom_density()
+
+```{r geom_density}
+weather_df %>% 
+  ggplot(aes(x = tmin, fill = name)) +
+  geom_density(alpha = 0.3)
+```
+
+#### Box plots
+
+```{r boxplot baby}
+weather_df %>% 
+  ggplot(aes(x = name, y = tmin)) +
+  geom_boxplot()
+```
+
+#### Trendy plots
+
+```{r violin}
+weather_df %>% 
+  ggplot(aes(x = name, y = tmin, fill = name)) +
+  geom_violin(alpha = 0.5) +
+  stat_summary(fun = "median")
+```
+
+```{r ridge plot}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = name)) +
+  geom_density_ridges()
+```
+Need to load the ggridges packages in order to use this plot.
+
+## Save and embed
+
+#### Let's save a scatterplot.
+
+```{r}
+weather_plot = 
+  weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax, color = name)) +
+  geom_point()
+
+ggsave("weather_plot.pdf", weather_plot, width = 8, height = 5)
+```
+
+#### Let's embed
+
+```{r, fig.width=12, fig.height=6}
+weather_plot
+```
+
