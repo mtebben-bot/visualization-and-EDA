@@ -304,3 +304,37 @@ tmin_tmax_p + prcp_dens_p
 ![](ggplot2_pt2_files/figure-gfm/patchwork-1.png)<!-- --> Patchwork
 displays when you name these plots and then use + or / to determine
 positioning and inclusion of plots.
+
+## Data manipulation
+
+``` r
+weather_df %>% 
+  mutate(
+    name = factor(name),
+    name = forcats::fct_relevel(name, c("Waikiki_HA"))
+  ) %>% 
+  ggplot(aes(x = name, y = tmax, fill = name)) +
+  geom_violin(alpha = 0.5)
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_ydensity).
+
+![](ggplot2_pt2_files/figure-gfm/manipulate-1.png)<!-- -->
+
+#### Getting densities for tmin and tmax overlaid.
+
+``` r
+weather_df %>% 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "observation",
+    values_to = "temperatures"
+  ) %>% 
+  ggplot(aes(x = temperatures, fill = observation)) +
+  geom_density(alpha = 0.5) +
+  facet_grid(. ~ name)
+```
+
+    ## Warning: Removed 18 rows containing non-finite values (stat_density).
+
+![](ggplot2_pt2_files/figure-gfm/tmin%20and%20tmax-1.png)<!-- -->
